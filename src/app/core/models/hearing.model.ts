@@ -1,0 +1,3 @@
+export interface Hearing { id: string; law_office_id: string; case_id: string; title: string; hearing_type: string | null; scheduled_at: string; location: string | null; status: string; notes: string | null; created_at: string; updated_at: string; is_active: boolean; }
+export interface HearingCreate { case_id: string; title: string; hearing_type?: string | null; scheduled_at: string; location?: string | null; status?: string; notes?: string | null; }
+export interface HearingUpdate { title?: string | null; hearing_type?: string | null; scheduled_at?: string | null; location?: string | null; status?: string | null; notes?: string | null; }

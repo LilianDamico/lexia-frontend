@@ -1,0 +1,135 @@
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+
+@Component({
+  selector: 'LEXIA-navbar',
+  standalone: true,
+  imports: [RouterLink],
+  styles: [`
+    :host {
+      --navy:     rgb(0, 0, 50);
+      --lime:     #b8ff3c;
+      --lime-dim: #94cc2e;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 4%;
+      background: rgba(0, 0, 50, 0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(184,255,60,0.12);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .nav-brand-dot {
+      width: 9px;
+      height: 9px;
+      background: var(--lime);
+      border-radius: 50%;
+    }
+
+    .nav-brand-name {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+    .nav-link {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.70);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+
+    .nav-actions {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .btn-ghost {
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #fff;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.22);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--lime); background: rgba(184,255,60,0.07); }
+
+    .btn-lime {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--navy);
+      background: var(--lime);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-lime:hover { background: var(--lime-dim); transform: translateY(-1px); }
+
+    @media (max-width: 480px) {
+      .nav { padding: 0.85rem 5%; }
+      .btn-ghost { display: none; }
+      .nav-links { display: none; }
+    }
+  `],
+  template: `
+    <nav class="nav">
+      <a class="nav-brand" routerLink="/">
+        <span class="nav-brand-dot"></span>
+        <span class="nav-brand-name">LEXIA</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Links principais">
+        <a class="nav-link" routerLink="/pricing">Planos</a>
+      </nav>
+
+      <div class="nav-actions">
+        @if (isAuthenticated()) {
+          <a class="btn-lime" routerLink="/dashboard">Acessar plataforma</a>
+        } @else {
+          <a class="btn-ghost" routerLink="/login">Entrar</a>
+          <a class="btn-lime" routerLink="/register">Criar conta</a>
+        }
+      </div>
+    </nav>
+  `,
+})
+export class NavbarComponent {
+  private readonly authService = inject(AuthService);
+  readonly isAuthenticated = computed(() => this.authService.isAuthenticated());
+}

@@ -1,0 +1,1 @@
+export interface Document { id: string; law_office_id: string; case_id: string; file_name: string; original_file_name: string; file_path: string; mime_type: string; file_size: number; document_type: string | null; extracted_text: string | null; summary: string | null; created_at: string; updated_at: string; is_active: boolean; }

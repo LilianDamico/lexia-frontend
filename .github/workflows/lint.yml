@@ -1,0 +1,29 @@
+name: Lint & Build Check — Frontend
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+
+jobs:
+  frontend-lint:
+    name: Angular Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint Angular
+        run: npm run lint --if-present
+
+      - name: Build check
+        run: npm run build
