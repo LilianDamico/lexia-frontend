@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { AuthUser, LoginRequest, TokenResponse } from '../models/auth.model';
+import { AuthUser, LoginRequest, RegisterRequest, TokenResponse } from '../models/auth.model';
 import { API_ENDPOINTS } from '../config/api.config';
 
 const TOKEN_KEY = 'lexia_token';
@@ -35,6 +35,27 @@ export class AuthService {
       catchError((error: unknown) => {
         console.error('Erro ao autenticar usuário.', error);
         return throwError(() => new Error('Não foi possível autenticar com as credenciais informadas.'));
+      }),
+    );
+  }
+
+  register(data: RegisterRequest): Observable<TokenResponse> {
+    return this.http.post<TokenResponse>(`${API_ENDPOINTS.auth}/register`, data).pipe(
+      tap((response) => {
+        localStorage.setItem(TOKEN_KEY, response.access_token);
+        localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh_token);
+        const user: AuthUser = {
+          userId: response.user_id,
+          email: response.email,
+          role: response.role,
+          lawOfficeId: response.law_office_id,
+        };
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+        this._user.set(user);
+      }),
+      catchError((error: unknown) => {
+        console.error('Erro ao registrar usuário.', error);
+        return throwError(() => new Error('Não foi possível criar a conta. Verifique os dados e tente novamente.'));
       }),
     );
   }
