@@ -13,8 +13,8 @@ export const API_ENDPOINTS = {
   petitions: `${API_BASE}/petitions`,
   documents: `${API_BASE}/documents`,
   research: `${API_BASE}/research`,
-  CALCULATIONS: `${API_BASE}/calculations`,
-  NOTIFICATIONS: `${API_BASE}/notifications`,
-  USERS: `${API_BASE}/users`,
-  AUDIT: `${API_BASE}/audit`,
+  calculations: `${API_BASE}/calculations`,
+  notifications: `${API_BASE}/notifications`,
+  users: `${API_BASE}/users`,
+  audit: `${API_BASE}/audit`,
 } as const;

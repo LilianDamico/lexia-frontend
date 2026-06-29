@@ -9,76 +9,8 @@ import { LexIADatePipe } from '../../../shared/pipes/lexia-date.pipe';
   selector: 'lexia-client-list',
   standalone: true,
   imports: [RouterLink, ConfirmDialogComponent, LexIADatePipe],
-  template: `
-    <section class="page">
-      <header class="page-header">
-        <div>
-          <h2>Clientes</h2>
-          <p>Gerencie a base de clientes do escritório.</p>
-        </div>
-        <div class="actions">
-          <button type="button" class="btn-secondary" (click)="loadClients()" [disabled]="loading()">Atualizar</button>
-          <a class="btn-primary" routerLink="/clients/new">Novo cliente</a>
-        </div>
-      </header>
-
-      @if (errorMessage()) {
-        <p class="alert alert-error">{{ errorMessage() }}</p>
-      }
-
-      <article class="card">
-        @if (loading()) {
-          <p>Carregando clientes...</p>
-        } @else if (!clients().length) {
-          <div class="empty-state">
-            <h3>Nenhum cliente cadastrado</h3>
-            <p>Crie o primeiro cliente para iniciar a operação.</p>
-          </div>
-        } @else {
-          <div class="table-wrapper">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Documento</th>
-                  <th>E-mail</th>
-                  <th>Telefone</th>
-                  <th>Atualizado em</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (client of clients(); track client.id) {
-                  <tr>
-                    <td>{{ client.name }}</td>
-                    <td>{{ client.document_number || '—' }}</td>
-                    <td>{{ client.email || '—' }}</td>
-                    <td>{{ client.phone || '—' }}</td>
-                    <td>{{ client.updated_at | lexiaDate }}</td>
-                    <td>
-                      <div class="inline-actions">
-                        <a class="btn-secondary" [routerLink]="['/clients', client.id, 'edit']">Editar</a>
-                        <button type="button" class="btn-danger" (click)="openDelete(client)">Excluir</button>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
-      </article>
-    </section>
-
-    <lexia-confirm-dialog
-      [visible]="confirmTarget() !== null"
-      title="Excluir cliente"
-      [message]="'Deseja excluir o cliente ' + (confirmTarget()?.name ?? '') + '? Esta ação não pode ser desfeita.'"
-      confirmLabel="Excluir"
-      (confirmed)="deleteConfirmed()"
-      (cancelled)="confirmTarget.set(null)"
-    />
-  `,
+  templateUrl: './client-list.component.html',
+  styleUrl: './client-list.component.css'
 })
 export class ClientListComponent implements OnInit {
   private readonly clientService = inject(ClientService);

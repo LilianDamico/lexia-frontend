@@ -1,0 +1,63 @@
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>{{ isEditMode() ? 'Editar cliente' : 'Novo cliente' }}</h2>
+          <p>Cadastre dados essenciais para relacionamento jurÃ­dico e operacional.</p>
+        </div>
+        <a class="btn-secondary" routerLink="/clients">Voltar</a>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando formulÃ¡rio...</p>
+        } @else {
+          <form class="form-stack" [formGroup]="form" (ngSubmit)="save()" novalidate>
+            <div class="form-grid">
+              <label>
+                Nome
+                <input type="text" formControlName="name" placeholder="Nome completo ou razÃ£o social" />
+                @if (submitted() && form.controls.name.invalid) {
+                  <span class="field-error">Informe o nome do cliente.</span>
+                }
+              </label>
+
+              <label>
+                Documento
+                <input type="text" formControlName="document_number" placeholder="CPF, CNPJ ou outro identificador" />
+              </label>
+
+              <label>
+                E-mail
+                <input type="email" formControlName="email" placeholder="cliente@dominio.com" />
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                  <span class="field-error">Informe um e-mail vÃ¡lido.</span>
+                }
+              </label>
+
+              <label>
+                Telefone
+                <input type="text" formControlName="phone" placeholder="(00) 00000-0000" />
+              </label>
+
+              <label class="full-width">
+                ObservaÃ§Ãµes
+                <textarea formControlName="notes" placeholder="AnotaÃ§Ãµes relevantes sobre o cliente"></textarea>
+              </label>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary" [disabled]="saving()">
+                {{ saving() ? 'Salvando...' : 'Salvar cliente' }}
+              </button>
+              <a class="btn-secondary" routerLink="/clients">Cancelar</a>
+            </div>
+          </form>
+        }
+      </article>
+    </section>
+  

@@ -11,76 +11,8 @@ import { toNullable } from '../../../shared/utils/form.utils';
   selector: 'lexia-petition-form',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
-  template: `
-    <section class="page">
-      <header class="page-header">
-        <div>
-          <h2>{{ isEditMode() ? 'Editar petição' : 'Nova petição' }}</h2>
-          <p>Registre a peça, seu conteúdo e o caso relacionado.</p>
-        </div>
-        <a class="btn-secondary" routerLink="/petitions">Voltar</a>
-      </header>
-
-      @if (errorMessage()) {
-        <p class="alert alert-error">{{ errorMessage() }}</p>
-      }
-
-      <article class="card">
-        @if (loading()) {
-          <p>Carregando formulário...</p>
-        } @else {
-          <form class="form-stack" [formGroup]="form" (ngSubmit)="save()" novalidate>
-            <div class="form-grid">
-              <label>
-                Título
-                <input type="text" formControlName="title" placeholder="Ex.: Contestação trabalhista" />
-                @if (submitted() && form.controls.title.invalid) {
-                  <span class="field-error">Informe o título da petição.</span>
-                }
-              </label>
-
-              <label>
-                Caso
-                <select formControlName="case_id">
-                  <option value="">Selecione</option>
-                  @for (legalCase of cases(); track legalCase.id) {
-                    <option [value]="legalCase.id">{{ legalCase.title }}</option>
-                  }
-                </select>
-                @if (submitted() && form.controls.case_id.invalid) {
-                  <span class="field-error">Selecione o caso.</span>
-                }
-              </label>
-
-              <label>
-                Tipo da petição
-                <input type="text" formControlName="petition_type" placeholder="Inicial, réplica, recurso..." />
-              </label>
-
-              <label class="full-width">
-                Conteúdo
-                <textarea formControlName="content" placeholder="Desenvolva ou cole o texto da petição"></textarea>
-                @if (submitted() && form.controls.content.invalid) {
-                  <span class="field-error">Informe o conteúdo da petição.</span>
-                }
-              </label>
-            </div>
-
-            @if (isEditMode()) {
-              <p class="form-hint">O caso associado fica bloqueado na edição para seguir o contrato atual da API.</p>
-            }
-
-            <div class="actions">
-              <button type="submit" class="btn-primary" [disabled]="saving()">
-                {{ saving() ? 'Salvando...' : 'Salvar petição' }}
-              </button>
-              <a class="btn-secondary" routerLink="/petitions">Cancelar</a>
-            </div>
-          </form>
-        }
-      </article>
-    </section>
-  `,
+  templateUrl: './petition-form.component.html',
+  styleUrl: './petition-form.component.css'
 })
 export class PetitionFormComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
@@ -192,9 +124,5 @@ export class PetitionFormComponent implements OnInit {
         this.errorMessage.set(error.message);
       },
     });
-  }
-
-  private optional(value: string): string | null {
-    return toNullable(value);
   }
 }

@@ -15,46 +15,8 @@ interface DashboardMetrics {
 @Component({
   selector: 'lexia-dashboard',
   standalone: true,
-  template: `
-    <section class="page">
-      <header class="page-header">
-        <div>
-          <h2>Dashboard operacional</h2>
-          <p>Visão rápida da operação do escritório autenticado.</p>
-        </div>
-        <button type="button" class="btn-secondary" (click)="loadMetrics()" [disabled]="loading()">Atualizar</button>
-      </header>
-
-      @if (errorMessage()) {
-        <p class="alert alert-error">{{ errorMessage() }}</p>
-      }
-
-      @if (loading()) {
-        <article class="card">
-          <p>Carregando métricas...</p>
-        </article>
-      } @else {
-        <div class="metrics-grid">
-          <article class="card metric-card">
-            <span class="metric-label">Clientes</span>
-            <strong class="metric-value">{{ metrics().clients }}</strong>
-          </article>
-          <article class="card metric-card">
-            <span class="metric-label">Casos</span>
-            <strong class="metric-value">{{ metrics().cases }}</strong>
-          </article>
-          <article class="card metric-card">
-            <span class="metric-label">Prazos</span>
-            <strong class="metric-value">{{ metrics().deadlines }}</strong>
-          </article>
-          <article class="card metric-card">
-            <span class="metric-label">Audiências</span>
-            <strong class="metric-value">{{ metrics().hearings }}</strong>
-          </article>
-        </div>
-      }
-    </section>
-  `,
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
   private readonly clientService = inject(ClientService);

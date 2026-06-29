@@ -1,0 +1,68 @@
+
+    <div class="ai-disclaimer">
+      <span>⚠️</span>
+      <span>⚠️ Esta informação foi gerada por IA e requer revisão humana.</span>
+    </div>
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Notificações</h2>
+          <p>Acompanhe alertas operacionais, urgências e comunicações internas do escritório.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-secondary" (click)="loadNotifications()" [disabled]="loading()">Atualizar</button>
+          <button type="button" class="btn-primary" (click)="markAllAsRead()" [disabled]="markingAll() || !hasUnread()">
+            {{ markingAll() ? 'Marcando...' : 'Marcar todas como lidas' }}
+          </button>
+        </div>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+      @if (successMessage()) {
+        <p class="alert alert-success">{{ successMessage() }}</p>
+      }
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando notificações...</p>
+        } @else if (!notifications().length) {
+          <div class="empty-state">
+            <h3>Nenhuma notificação disponível</h3>
+            <p>Os novos alertas do sistema aparecerão aqui automaticamente.</p>
+          </div>
+        } @else {
+          <div class="notifications-list">
+            @for (notification of notifications(); track notification.id) {
+              <article class="notification-item" [class.unread]="isUnread(notification)">
+                <div class="notification-header">
+                  <div class="notification-title-block">
+                    <span class="notification-icon">{{ urgencyIcon(notification.notification_type) }}</span>
+                    <div>
+                      <h3>{{ notification.title }}</h3>
+                      <p class="muted">{{ notification.created_at | lexiaDate }}</p>
+                    </div>
+                  </div>
+                  @if (isUnread(notification)) {
+                    <span class="status-badge unread">Não lida</span>
+                  } @else {
+                    <span class="status-badge read">Lida</span>
+                  }
+                </div>
+
+                <p>{{ notification.body }}</p>
+
+                <div class="notification-meta">
+                  <span><strong>Tipo:</strong> {{ notification.notification_type }}</span>
+                  <span><strong>Referência:</strong> {{ notification.reference_type || '—' }}</span>
+                  <span><strong>ID ref.:</strong> {{ notification.reference_id || '—' }}</span>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </article>
+    </section>
+  

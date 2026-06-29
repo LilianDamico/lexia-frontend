@@ -1,0 +1,201 @@
+
+    <!-- ═══════════════════════════ HERO ═══════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Planos & Preços
+      </div>
+
+      <h1 class="hero-title">
+        <em>LEXIA</em> IA Jur&iacute;dica
+      </h1>
+
+      <p class="hero-subtitle">
+        A intelig&ecirc;ncia artificial que trabalha ao lado do seu escrit&oacute;rio.
+      </p>
+
+      <p class="hero-text">
+        Automatize pesquisas, organize conhecimento jur&iacute;dico
+        e produza documentos em minutos.
+      </p>
+
+      <a class="btn-hero-primary" routerLink="/register">
+        Come&ccedil;ar Agora &#x203A;
+      </a>
+    </section>
+
+    <!-- ═══════════════════════ CARDS DE PLANOS ════════════════════════════ -->
+    <section class="section section-dark" aria-labelledby="plans-heading">
+      <div class="section-header">
+        <span class="section-label">Escolha seu plano</span>
+        <h2 class="section-title" id="plans-heading">
+          Intelig&ecirc;ncia jur&iacute;dica<br>no seu ritmo
+        </h2>
+        <p class="section-desc">
+          Do advogado aut&ocirc;nomo ao grande escrit&oacute;rio. Sem burocracia, sem contratos longos.
+        </p>
+      </div>
+
+      <div class="plans-grid">
+        @for (plan of plans; track plan.id) {
+          <article
+            class="plan-card"
+            [class.highlighted]="plan.highlighted"
+            [attr.aria-label]="'Plano ' + plan.name"
+          >
+            @if (plan.badge) {
+              <div class="plan-badge">{{ plan.badge }}</div>
+            }
+
+            <div class="plan-header">
+              <h3 class="plan-name">{{ plan.name }}</h3>
+              <p class="plan-audience">{{ plan.targetAudience }}</p>
+
+              <div class="plan-price-row">
+                <span
+                  class="plan-price"
+                  [class.enterprise-price]="plan.id === SubscriptionTier.ENTERPRISE"
+                >
+                  {{ plan.price }}
+                </span>
+                @if (plan.priceNote) {
+                  <span class="plan-price-note">{{ plan.priceNote }}</span>
+                }
+              </div>
+
+              <p class="plan-desc">{{ plan.description }}</p>
+            </div>
+
+            <div class="plan-divider"></div>
+
+            <ul class="plan-benefits">
+              @for (benefit of plan.benefits; track benefit) {
+                <li class="plan-benefit">
+                  <span class="benefit-icon" aria-hidden="true">&#10003;</span>
+                  {{ benefit }}
+                </li>
+              }
+            </ul>
+
+            <button
+              type="button"
+              class="plan-cta"
+              [class.plan-cta-primary]="plan.highlighted"
+              [class.plan-cta-outline]="!plan.highlighted && plan.id !== SubscriptionTier.ENTERPRISE"
+              [class.plan-cta-enterprise]="plan.id === SubscriptionTier.ENTERPRISE"
+              (click)="onPlanCtaClick(plan)"
+              [attr.aria-label]="plan.ctaLabel + ' — Plano ' + plan.name"
+            >
+              {{ plan.ctaLabel }}
+            </button>
+          </article>
+        }
+      </div>
+    </section>
+
+    <!-- ════════════════════ COMPARATIVO DE RECURSOS ══════════════════════ -->
+    <section class="section section-light" aria-labelledby="compare-heading">
+      <div class="section-header">
+        <span class="section-label section-label-dark">Comparativo</span>
+        <h2 class="section-title section-title-dark" id="compare-heading">
+          Todos os recursos,<br>lado a lado
+        </h2>
+        <p class="section-desc section-desc-dark">
+          Compare os planos e encontre o que melhor se encaixa na realidade do seu escrit&oacute;rio.
+        </p>
+      </div>
+
+      <div class="compare-wrapper">
+        <table class="compare-table" aria-label="Tabela comparativa de planos">
+          <thead>
+            <tr>
+              <th scope="col">Recurso</th>
+              @for (plan of plans; track plan.id) {
+                <th
+                  scope="col"
+                  [class.col-highlight]="plan.highlighted"
+                >
+                  {{ plan.name }}
+                  @if (plan.badge) {
+                    <br><small style="font-size:0.68rem;opacity:0.8">{{ plan.badge }}</small>
+                  }
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of comparisonRows; track row.label) {
+              <tr>
+                <td>{{ row.label }}</td>
+                @for (plan of plans; track plan.id) {
+                  <td [class.col-highlight]="plan.highlighted">
+                    {{ renderFeature(plan, row.key) }}
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ FAQ ═══════════════════════════════════ -->
+    <section class="section section-navy" aria-labelledby="faq-heading">
+      <div class="section-header">
+        <span class="section-label">D&uacute;vidas frequentes</span>
+        <h2 class="section-title" id="faq-heading">Perguntas & Respostas</h2>
+      </div>
+
+      <div class="faq-list" role="list">
+        @for (item of faqItems; track item.question; let i = $index) {
+          <div
+            class="faq-item"
+            [class.open]="openFaq() === i"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="faq-question"
+              (click)="toggleFaq(i)"
+              [attr.aria-expanded]="openFaq() === i"
+              [attr.aria-controls]="'faq-answer-' + i"
+            >
+              {{ item.question }}
+              <span class="faq-chevron" aria-hidden="true">&#9660;</span>
+            </button>
+
+            @if (openFaq() === i) {
+              <div
+                class="faq-answer"
+                [id]="'faq-answer-' + i"
+                role="region"
+              >
+                {{ item.answer }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ════════════════════════ CTA FINAL ════════════════════════════════ -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <span class="section-label">Pronto para come&ccedil;ar?</span>
+      <h2 class="cta-title" id="cta-heading">
+        Eleve o n&iacute;vel<br>do seu escrit&oacute;rio
+      </h2>
+      <p class="cta-desc">
+        Junte-se a escrit&oacute;rios que j&aacute; operam com intelig&ecirc;ncia jur&iacute;dica real.
+        Escolha um plano e comece hoje.
+      </p>
+      <div class="cta-actions">
+        <a class="btn-hero-primary" routerLink="/register">Criar conta &#x203A;</a>
+        <a class="btn-cta-ghost" routerLink="/login">J&aacute; tenho uma conta</a>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════ RODAPÉ DA PÁGINA ══════════════════════════ -->
+    <div class="pricing-footer">
+      <strong>LEXIA</strong> &bull; Intelig&ecirc;ncia Artificial para o Direito
+    </div>
+  

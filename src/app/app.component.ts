@@ -6,43 +6,8 @@ import { AuthService } from './core/services/auth.service';
   selector: 'lexia-shell',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
-  template: `
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div>
-          <div class="sidebar-brand">
-            <h1>LexIA</h1>
-            <p>Operação jurídica assistida por IA</p>
-          </div>
-          <p class="sidebar-user">{{ auth.user()?.email }}</p>
-        </div>
-
-        <nav class="sidebar-nav">
-          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-          <a routerLink="/clients" routerLinkActive="active">Clientes</a>
-          <a routerLink="/cases" routerLinkActive="active">Casos</a>
-          <a routerLink="/deadlines" routerLinkActive="active">Prazos</a>
-          <a routerLink="/hearings" routerLinkActive="active">Audiências</a>
-          <a routerLink="/petitions" routerLinkActive="active">Petições</a>
-          <a routerLink="/documents" routerLinkActive="active">Documentos</a>
-          <a routerLink="/calculations" routerLinkActive="active">🧮 Cálculos</a>
-          <a routerLink="/notifications" routerLinkActive="active">🔔 Notificações</a>
-          <a routerLink="/research" routerLinkActive="active">Pesquisa</a>
-          <a routerLink="/settings" routerLinkActive="active">⚙️ Configurações</a>
-          @if (isAdmin()) {
-            <a routerLink="/administration" routerLinkActive="active">⚙️ Administração</a>
-            <a routerLink="/audit" routerLinkActive="active">📋 Auditoria</a>
-          }
-        </nav>
-
-        <button type="button" class="btn-ghost" (click)="logout()">Sair</button>
-      </aside>
-
-      <main class="main-content">
-        <router-outlet />
-      </main>
-    </div>
-  `,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
 export class AppComponent {
   readonly auth = inject(AuthService);

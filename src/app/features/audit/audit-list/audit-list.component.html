@@ -1,0 +1,80 @@
+
+    <div class="ai-disclaimer">
+      <span>⚠️</span>
+      <span>⚠️ Esta informação foi gerada por IA e requer revisão humana.</span>
+    </div>
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Auditoria</h2>
+          <p>Monitore eventos administrativos e operacionais sensíveis do escritório.</p>
+        </div>
+        <button type="button" class="btn-secondary" (click)="loadEvents()" [disabled]="loading()">Atualizar</button>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        <form class="filters" [formGroup]="filtersForm">
+          <label>
+            Tipo de evento
+            <select formControlName="event_type">
+              <option value="">Todos</option>
+              @for (eventType of eventTypes(); track eventType) {
+                <option [value]="eventType">{{ eventType }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Data
+            <input type="date" formControlName="date" />
+          </label>
+        </form>
+      </article>
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando eventos de auditoria...</p>
+        } @else if (!filteredEvents().length) {
+          <div class="empty-state">
+            <h3>Nenhum evento encontrado</h3>
+            <p>Ajuste os filtros ou aguarde novos registros de auditoria.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Data/hora</th>
+                  <th>Tipo do evento</th>
+                  <th>Entidade</th>
+                  <th>Usuário</th>
+                  <th>Detalhes</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (event of filteredEvents(); track event.id) {
+                  <tr>
+                    <td>{{ event.created_at | lexiaDate }}</td>
+                    <td><span class="status-badge processing">{{ event.event_type }}</span></td>
+                    <td>{{ entityLabel(event) }}</td>
+                    <td>{{ event.user_email || event.user_id || '—' }}</td>
+                    <td>
+                      <details class="json-details">
+                        <summary>Ver JSON</summary>
+                        <pre>{{ stringifyDetails(event.details) }}</pre>
+                      </details>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+    </section>
+  

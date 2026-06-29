@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'lexia-root',
   standalone: true,
   imports: [RouterOutlet],
-  template: '<router-outlet />',
+  templateUrl: './root.component.html',
+  styleUrl: './root.component.css'
 })
 export class RootComponent {}

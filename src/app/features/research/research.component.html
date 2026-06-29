@@ -1,0 +1,78 @@
+
+    <!-- DIRECT.md: IA apenas executa análises e sugestões solicitadas pelo advogado -->
+    <div class="ai-disclaimer">
+      <span>⚠️</span>
+      <span>
+        <strong>Atenção — Pesquisa assistida por IA</strong>
+        O resultado desta pesquisa é uma análise assistida. Toda conclusão deve ser verificada pelo advogado.
+        A responsabilidade jurídica pertence exclusivamente ao profissional habilitado.
+      </span>
+    </div>
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Pesquisa jurídica interna</h2>
+          <p>Consulte a base da LexIA com apoio do motor de IA.</p>
+        </div>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        <form class="form-stack" [formGroup]="form" (ngSubmit)="search()" novalidate>
+          <label>
+            Pergunta jurídica
+            <textarea formControlName="query" placeholder="Descreva a dúvida, contexto e objetivo da pesquisa"></textarea>
+            @if (submitted() && form.controls.query.invalid) {
+              <span class="field-error">Informe a pergunta para executar a pesquisa.</span>
+            }
+          </label>
+          <div class="actions">
+            <button type="submit" class="btn-primary" [disabled]="loading()">
+              {{ loading() ? 'Pesquisando...' : 'Pesquisar' }}
+            </button>
+          </div>
+        </form>
+      </article>
+
+      @if (result()) {
+        <article class="card">
+          <h3>Resposta</h3>
+          <pre class="answer-block">{{ result()!.answer }}</pre>
+
+          <!-- DIRECT.md: toda informação apresentada deve indicar Fonte, Trecho, Tipo, Nível de confiança e Origem -->
+          @if (hasMetadata()) {
+            <dl class="confidence-block" style="margin-top:1rem;">
+              @if (result()!.information_type) {
+                <dt>Tipo da informação</dt>
+                <dd>{{ result()!.information_type }}</dd>
+              }
+              @if (result()!.confidence_level) {
+                <dt>Nível de confiança</dt>
+                <dd>{{ confidenceLabel(result()!.confidence_level) }}</dd>
+              }
+              @if (result()!.source) {
+                <dt>Fonte</dt>
+                <dd>{{ result()!.source }}</dd>
+              }
+              @if (result()!.excerpt) {
+                <dt>Trecho utilizado</dt>
+                <dd>{{ result()!.excerpt }}</dd>
+              }
+              @if (result()!.evidence_origin) {
+                <dt>Origem da evidência</dt>
+                <dd>{{ result()!.evidence_origin }}</dd>
+              }
+            </dl>
+          } @else {
+            <p class="muted" style="margin-top:.75rem; font-size:.85rem;">
+              ℹ️ Metadados de confiabilidade não disponíveis para esta resposta. Verifique as fontes independentemente.
+            </p>
+          }
+        </article>
+      }
+    </section>
+  

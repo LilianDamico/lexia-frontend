@@ -1,0 +1,62 @@
+
+    <div class="ai-disclaimer">
+      <span>⚠️</span>
+      <span>⚠️ Esta informação foi gerada por IA e requer revisão humana.</span>
+    </div>
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Administração</h2>
+          <p>Visão administrativa dos usuários vinculados ao escritório autenticado.</p>
+        </div>
+        <button type="button" class="btn-secondary" (click)="loadUsers()" [disabled]="loading()">Atualizar</button>
+      </header>
+
+      <p class="alert" style="background:#fff7ed; color:#9a3412;">Gerenciamento completo de usuários disponível em breve.</p>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando usuários...</p>
+        } @else if (!users().length) {
+          <div class="empty-state">
+            <h3>Nenhum usuário encontrado</h3>
+            <p>Os usuários ativos do escritório serão exibidos aqui.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>E-mail</th>
+                  <th>Nome</th>
+                  <th>Perfil</th>
+                  <th>Status</th>
+                  <th>Criado em</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of users(); track user.id) {
+                  <tr>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.full_name }}</td>
+                    <td><span class="status-badge active">{{ roleLabel(user.role) }}</span></td>
+                    <td>
+                      <span class="status-badge {{ user.is_active ? 'approved' : 'inactive' }}">
+                        {{ user.is_active ? 'Ativo' : 'Inativo' }}
+                      </span>
+                    </td>
+                    <td>{{ user.created_at | lexiaDate }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+    </section>
+  

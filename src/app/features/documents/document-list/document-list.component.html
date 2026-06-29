@@ -1,0 +1,115 @@
+
+    <!-- DIRECT.md: nenhum documento poderÃ¡ ser enviado automaticamente -->
+    <div class="ai-disclaimer">
+      <span>ðŸ“„</span>
+      <span>
+        <strong>Controle de documentos</strong>
+        Nenhum documento Ã© enviado automaticamente. Todo envio requer aÃ§Ã£o explÃ­cita do advogado.
+        Documentos analisados por IA sÃ£o apenas processados para extraÃ§Ã£o de conteÃºdo.
+      </span>
+    </div>
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Documentos</h2>
+          <p>Selecione um caso para listar e enviar documentos.</p>
+        </div>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+      @if (successMessage()) {
+        <p class="alert alert-success">{{ successMessage() }}</p>
+      }
+
+      <article class="card">
+        <form class="form-stack" [formGroup]="form" (ngSubmit)="upload()" novalidate>
+          <div class="form-grid">
+            <label>
+              Caso
+              <select formControlName="case_id" (change)="loadDocuments()">
+                <option value="">Selecione</option>
+                @for (legalCase of cases(); track legalCase.id) {
+                  <option [value]="legalCase.id">{{ legalCase.title }}</option>
+                }
+              </select>
+            </label>
+
+            <label>
+              Tipo do documento
+              <input type="text" formControlName="document_type" placeholder="Contrato, procuraÃ§Ã£o, laudo..." />
+            </label>
+
+            <label>
+              Arquivo
+              <input type="file" (change)="onFileSelected($event)" />
+              <span class="field-hint">{{ selectedFile()?.name || 'Nenhum arquivo selecionado' }}</span>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn-primary" [disabled]="uploading()">
+              {{ uploading() ? 'Enviando...' : 'Enviar documento' }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="loadDocuments()" [disabled]="documentsLoading()">
+              Atualizar lista
+            </button>
+          </div>
+        </form>
+      </article>
+
+      <article class="card">
+        @if (!form.controls.case_id.value) {
+          <div class="empty-state">
+            <h3>Selecione um caso</h3>
+            <p>Os documentos serÃ£o exibidos apÃ³s a seleÃ§Ã£o do caso.</p>
+          </div>
+        } @else if (documentsLoading()) {
+          <p>Carregando documentos...</p>
+        } @else if (!documents().length) {
+          <div class="empty-state">
+            <h3>Nenhum documento encontrado</h3>
+            <p>Envie o primeiro documento para este caso.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Arquivo</th>
+                  <th>Tipo</th>
+                  <th>Tamanho</th>
+                  <th>Enviado em</th>
+                  <th>AÃ§Ãµes</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (document of documents(); track document.id) {
+                  <tr>
+                    <td>{{ document.original_file_name }}</td>
+                    <td>{{ document.document_type || 'â€”' }}</td>
+                    <td>{{ formatSize(document.file_size) }}</td>
+                    <td>{{ document.created_at | lexiaDate }}</td>
+                    <td>
+                      <button type="button" class="btn-danger" (click)="openDelete(document)">Excluir</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+    </section>
+
+    <lexia-confirm-dialog
+      [visible]="confirmTarget() !== null"
+      title="Excluir documento"
+      [message]="'Deseja excluir o documento ' + (confirmTarget()?.original_file_name ?? '') + '? Esta aÃ§Ã£o nÃ£o pode ser desfeita.'"
+      confirmLabel="Excluir"
+      (confirmed)="deleteConfirmed()"
+      (cancelled)="confirmTarget.set(null)"
+    />
+  

@@ -1,0 +1,70 @@
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Audiências</h2>
+          <p>Controle agendamentos, locais e andamento das audiências.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-secondary" (click)="loadHearings()" [disabled]="loading()">Atualizar</button>
+          <a class="btn-primary" routerLink="/hearings/new">Nova audiência</a>
+        </div>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando audiências...</p>
+        } @else if (!hearings().length) {
+          <div class="empty-state">
+            <h3>Nenhuma audiência cadastrada</h3>
+            <p>Cadastre audiências para organizar a agenda contenciosa.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Tipo</th>
+                  <th>Agendada para</th>
+                  <th>Local</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (hearing of hearings(); track hearing.id) {
+                  <tr>
+                    <td>{{ hearing.title }}</td>
+                    <td>{{ hearing.hearing_type || '—' }}</td>
+                    <td>{{ hearing.scheduled_at | lexiaDate }}</td>
+                    <td>{{ hearing.location || '—' }}</td>
+                    <td><span class="status-badge {{ hearing.status }}">{{ hearing.status }}</span></td>
+                    <td>
+                      <div class="inline-actions">
+                        <a class="btn-secondary" [routerLink]="['/hearings', hearing.id, 'edit']">Editar</a>
+                        <button type="button" class="btn-danger" (click)="openDelete(hearing)">Excluir</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+    </section>
+
+    <lexia-confirm-dialog
+      [visible]="confirmTarget() !== null"
+      title="Excluir audiência"
+      [message]="'Deseja excluir a audiência ' + (confirmTarget()?.title ?? '') + '?'"
+      confirmLabel="Excluir"
+      (confirmed)="deleteConfirmed()"
+      (cancelled)="confirmTarget.set(null)"
+    />
+  

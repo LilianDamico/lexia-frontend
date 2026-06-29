@@ -1,0 +1,71 @@
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>Casos</h2>
+          <p>Controle os casos jurídicos e sua evolução processual.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-secondary" (click)="loadCases()" [disabled]="loading()">Atualizar</button>
+          <a class="btn-primary" routerLink="/cases/new">Novo caso</a>
+        </div>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando casos...</p>
+        } @else if (!cases().length) {
+          <div class="empty-state">
+            <h3>Nenhum caso cadastrado</h3>
+            <p>Crie um caso para conectar clientes, prazos e petições.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Status</th>
+                  <th>Número</th>
+                  <th>Tribunal</th>
+                  <th>Atualizado em</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (legalCase of cases(); track legalCase.id) {
+                  <tr>
+                    <td>{{ legalCase.title }}</td>
+                    <td><span class="status-badge {{ legalCase.status }}">{{ legalCase.status }}</span></td>
+                    <td>{{ legalCase.case_number || '—' }}</td>
+                    <td>{{ legalCase.court || '—' }}</td>
+                    <td>{{ legalCase.updated_at | lexiaDate }}</td>
+                    <td>
+                      <div class="inline-actions">
+                        <a class="btn-secondary" [routerLink]="['/cases', legalCase.id]">Detalhes</a>
+                        <a class="btn-secondary" [routerLink]="['/cases', legalCase.id, 'edit']">Editar</a>
+                        <button type="button" class="btn-danger" (click)="openDelete(legalCase)">Excluir</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+    </section>
+
+    <lexia-confirm-dialog
+      [visible]="confirmTarget() !== null"
+      title="Excluir caso"
+      [message]="'Deseja excluir o caso ' + (confirmTarget()?.title ?? '') + '? Todos os vínculos associados serão afetados.'"
+      confirmLabel="Excluir"
+      (confirmed)="deleteConfirmed()"
+      (cancelled)="confirmTarget.set(null)"
+    />
+  

@@ -1,0 +1,21 @@
+
+    <nav class="nav">
+      <a class="nav-brand" routerLink="/">
+        <span class="nav-brand-dot"></span>
+        <span class="nav-brand-name">LEXIA</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Links principais">
+        <a class="nav-link" routerLink="/pricing">Planos</a>
+      </nav>
+
+      <div class="nav-actions">
+        @if (isAuthenticated()) {
+          <a class="btn-lime" routerLink="/dashboard">Acessar plataforma</a>
+        } @else {
+          <a class="btn-ghost" routerLink="/login">Entrar</a>
+          <a class="btn-lime" routerLink="/register">Criar conta</a>
+        }
+      </div>
+    </nav>
+  

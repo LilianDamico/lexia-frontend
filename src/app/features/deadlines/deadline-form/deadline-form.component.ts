@@ -5,91 +5,14 @@ import { LegalCase } from '../../../core/models/case.model';
 import { DeadlineCreate, DeadlineUpdate } from '../../../core/models/deadline.model';
 import { CaseService } from '../../../core/services/case.service';
 import { DeadlineService } from '../../../core/services/deadline.service';
+import { toNullable } from '../../../shared/utils/form.utils';
 
 @Component({
   selector: 'lexia-deadline-form',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
-  template: `
-    <section class="page">
-      <header class="page-header">
-        <div>
-          <h2>{{ isEditMode() ? 'Editar prazo' : 'Novo prazo' }}</h2>
-          <p>Associe o prazo a um caso e defina sua execução.</p>
-        </div>
-        <a class="btn-secondary" routerLink="/deadlines">Voltar</a>
-      </header>
-
-      @if (errorMessage()) {
-        <p class="alert alert-error">{{ errorMessage() }}</p>
-      }
-
-      <article class="card">
-        @if (loading()) {
-          <p>Carregando formulário...</p>
-        } @else {
-          <form class="form-stack" [formGroup]="form" (ngSubmit)="save()" novalidate>
-            <div class="form-grid">
-              <label>
-                Título
-                <input type="text" formControlName="title" placeholder="Ex.: Protocolo de contestação" />
-                @if (submitted() && form.controls.title.invalid) {
-                  <span class="field-error">Informe o título do prazo.</span>
-                }
-              </label>
-
-              <label>
-                Caso
-                <select formControlName="case_id">
-                  <option value="">Selecione</option>
-                  @for (legalCase of cases(); track legalCase.id) {
-                    <option [value]="legalCase.id">{{ legalCase.title }}</option>
-                  }
-                </select>
-                @if (submitted() && form.controls.case_id.invalid) {
-                  <span class="field-error">Selecione o caso.</span>
-                }
-              </label>
-
-              <label>
-                Data e hora
-                <input type="datetime-local" formControlName="due_at" />
-                @if (submitted() && form.controls.due_at.invalid) {
-                  <span class="field-error">Informe a data e hora do prazo.</span>
-                }
-              </label>
-
-              <label>
-                Status
-                <select formControlName="status">
-                  <option value="pending">Pendente</option>
-                  <option value="completed">Concluído</option>
-                  <option value="expired">Vencido</option>
-                  <option value="cancelled">Cancelado</option>
-                </select>
-              </label>
-
-              <label class="full-width">
-                Descrição
-                <textarea formControlName="description" placeholder="Detalhes úteis para execução do prazo"></textarea>
-              </label>
-            </div>
-
-            @if (isEditMode()) {
-              <p class="form-hint">O caso permanece bloqueado na edição para manter aderência ao contrato atual da API.</p>
-            }
-
-            <div class="actions">
-              <button type="submit" class="btn-primary" [disabled]="saving()">
-                {{ saving() ? 'Salvando...' : 'Salvar prazo' }}
-              </button>
-              <a class="btn-secondary" routerLink="/deadlines">Cancelar</a>
-            </div>
-          </form>
-        }
-      </article>
-    </section>
-  `,
+  templateUrl: './deadline-form.component.html',
+  styleUrl: './deadline-form.component.css'
 })
 export class DeadlineFormComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
@@ -142,9 +65,9 @@ export class DeadlineFormComponent implements OnInit {
     if (this.isEditMode()) {
       const payload: DeadlineUpdate = {
         title: values.title,
-        description: this.optional(values.description),
+        description: toNullable(values.description),
         due_at: values.due_at,
-        status: this.optional(values.status),
+        status: toNullable(values.status),
       };
 
       this.deadlineService.update(this.deadlineId, payload).subscribe({
@@ -163,7 +86,7 @@ export class DeadlineFormComponent implements OnInit {
     const payload: DeadlineCreate = {
       case_id: values.case_id,
       title: values.title,
-      description: this.optional(values.description),
+      description: toNullable(values.description),
       due_at: values.due_at,
       status: values.status,
     };
@@ -205,11 +128,6 @@ export class DeadlineFormComponent implements OnInit {
         this.errorMessage.set(error.message);
       },
     });
-  }
-
-  private optional(value: string): string | null {
-    const trimmed = value.trim();
-    return trimmed ? trimmed : null;
   }
 
   private toInputDateTime(value: string): string {

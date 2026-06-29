@@ -1,0 +1,17 @@
+
+    .json-details summary {
+      cursor: pointer;
+      color: #174ea6;
+      font-weight: 600;
+    }
+    .json-details pre {
+      margin: 0.75rem 0 0;
+      padding: 0.85rem;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-width: 420px;
+    }
+  

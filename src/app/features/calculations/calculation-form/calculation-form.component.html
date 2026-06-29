@@ -1,0 +1,91 @@
+
+    <div class="ai-disclaimer">
+      <span>⚠️</span>
+      <span>⚠️ Esta informação foi gerada por IA e requer revisão humana.</span>
+    </div>
+
+    <section class="page">
+      <header class="page-header">
+        <div>
+          <h2>{{ isEditMode() ? 'Editar cálculo' : 'Novo cálculo' }}</h2>
+          <p>Informe os parâmetros do cálculo antes de registrar o resultado na operação.</p>
+        </div>
+        <a class="btn-secondary" routerLink="/calculations">Voltar</a>
+      </header>
+
+      @if (errorMessage()) {
+        <p class="alert alert-error">{{ errorMessage() }}</p>
+      }
+
+      <article class="card">
+        @if (loading()) {
+          <p>Carregando formulário...</p>
+        } @else {
+          <form class="form-stack" [formGroup]="form" (ngSubmit)="save()" novalidate>
+            <div class="form-grid">
+              <label>
+                Título
+                <input type="text" formControlName="title" placeholder="Ex.: Atualização de débito contratual" />
+                @if (submitted() && form.controls.title.invalid) {
+                  <span class="field-error">Informe o título do cálculo.</span>
+                }
+              </label>
+
+              <label>
+                Tipo de cálculo
+                <select formControlName="calculation_type">
+                  @for (option of calculationTypeOptions; track option.value) {
+                    <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              </label>
+
+              <label>
+                Valor principal
+                <input type="number" min="0" step="0.01" formControlName="principal_amount" />
+                @if (submitted() && form.controls.principal_amount.invalid) {
+                  <span class="field-error">Informe um valor principal válido.</span>
+                }
+              </label>
+
+              <label>
+                Taxa anual de juros (%)
+                <input type="number" min="0" step="0.01" formControlName="annual_interest_rate" />
+                @if (submitted() && form.controls.annual_interest_rate.invalid) {
+                  <span class="field-error">Informe uma taxa válida.</span>
+                }
+              </label>
+
+              <label>
+                Data inicial
+                <input type="date" formControlName="start_date" />
+                @if (submitted() && form.controls.start_date.invalid) {
+                  <span class="field-error">Informe a data inicial.</span>
+                }
+              </label>
+
+              <label>
+                Data final
+                <input type="date" formControlName="end_date" />
+                @if (submitted() && form.controls.end_date.invalid) {
+                  <span class="field-error">Informe a data final.</span>
+                }
+              </label>
+
+              <label class="full-width">
+                Observações
+                <textarea formControlName="notes" placeholder="Base legal, premissas e ressalvas do cálculo"></textarea>
+              </label>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary" [disabled]="saving()">
+                {{ saving() ? 'Salvando...' : 'Salvar cálculo' }}
+              </button>
+              <a class="btn-secondary" routerLink="/calculations">Cancelar</a>
+            </div>
+          </form>
+        }
+      </article>
+    </section>
+  

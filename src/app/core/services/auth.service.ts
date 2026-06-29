@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { AuthUser, LoginRequest, RegisterRequest, TokenResponse } from '../models/auth.model';
 import { API_ENDPOINTS } from '../config/api.config';
 
@@ -67,14 +67,40 @@ export class AuthService {
         .post(`${API_ENDPOINTS.auth}/logout`, { refresh_token: refreshToken })
         .subscribe({ error: (e) => console.warn('Logout remoto falhou:', e) });
     }
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    this._user.set(null);
+    this.clearSession();
   }
 
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
+  }
+
+  refreshTokens(): Observable<void> {
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (!refreshToken) {
+      return throwError(() => new Error('Sessão expirada. Faça login novamente.'));
+    }
+
+    return this.http
+      .post<TokenResponse>(`${API_ENDPOINTS.auth}/refresh`, { refresh_token: refreshToken })
+      .pipe(
+        tap((response) => {
+          localStorage.setItem(TOKEN_KEY, response.access_token);
+          localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh_token);
+        }),
+        map(() => undefined),
+        catchError((error: unknown) => {
+          console.error('[AuthService] Refresh token inválido — forçando logout.', error);
+          this.clearSession();
+          return throwError(() => new Error('Sessão expirada. Faça login novamente.'));
+        }),
+      );
+  }
+
+  private clearSession(): void {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    this._user.set(null);
   }
 
   private loadStoredUser(): AuthUser | null {

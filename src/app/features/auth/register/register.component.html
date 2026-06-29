@@ -1,0 +1,66 @@
+
+    <section class="auth-page">
+      <article class="auth-card">
+        <div>
+          <h1>Criar conta</h1>
+          <p class="muted">Comece agora — seu escritório estará pronto em instantes.</p>
+        </div>
+
+        @if (errorMessage()) {
+          <p class="alert alert-error">{{ errorMessage() }}</p>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="form-grid">
+            <label class="full-width">
+              Nome completo
+              <input type="text" formControlName="full_name" autocomplete="name" placeholder="Maria da Silva" />
+              @if (submitted() && form.controls.full_name.invalid) {
+                <span class="field-error">Informe seu nome completo (mínimo 3 caracteres).</span>
+              }
+            </label>
+
+            <label class="full-width">
+              Nome do escritório
+              <input type="text" formControlName="office_name" placeholder="Silva & Associados Advocacia" />
+              @if (submitted() && form.controls.office_name.invalid) {
+                <span class="field-error">Informe o nome do escritório.</span>
+              }
+            </label>
+
+            <label class="full-width">
+              E-mail profissional
+              <input type="email" formControlName="email" autocomplete="email" placeholder="voce@escritorio.com" />
+              @if (submitted() && form.controls.email.invalid) {
+                <span class="field-error">Informe um e-mail válido.</span>
+              }
+            </label>
+
+            <label>
+              Senha
+              <input type="password" formControlName="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+              @if (submitted() && form.controls.password.invalid) {
+                <span class="field-error">A senha deve ter pelo menos 8 caracteres.</span>
+              }
+            </label>
+
+            <label>
+              Confirmar senha
+              <input type="password" formControlName="confirmPassword" autocomplete="new-password" placeholder="Repita a senha" />
+              @if (submitted() && form.hasError('passwordMismatch')) {
+                <span class="field-error">As senhas não coincidem.</span>
+              }
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary" [disabled]="loading()">
+            {{ loading() ? 'Criando conta...' : 'Criar conta' }}
+          </button>
+        </form>
+
+        <p class="auth-link" style="text-align:center">
+          Já tem uma conta? <a routerLink="/login">Fazer login</a>
+        </p>
+      </article>
+    </section>
+  

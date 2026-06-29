@@ -10,7 +10,7 @@
 const fs   = require('fs');
 const path = require('path');
 
-const apiUrl = process.env.LEXIA_API_URL || 'https://lexia-api.onrender.com/api/v1';
+const apiUrl = process.env.LEXIA_API_URL || 'https://api.lexiaadv.com/api/v1';
 
 const content = `// Gerado automaticamente por scripts/set-env.js — não edite manualmente.
 // Para alterar a URL da API, defina LEXIA_API_URL no painel do Render.
