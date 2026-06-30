@@ -12,6 +12,6 @@ export class AdministrationService {
   private readonly http = inject(HttpClient);
 
   listUsers(): Observable<UserAdmin[]> {
-    return this.http.get<UserAdmin[]>(`${API_ENDPOINTS.users}/`).pipe(handleHttpError('listar usuários do escritório'));
+    return this.http.get<UserAdmin[]>(`${API_ENDPOINTS.users}`).pipe(handleHttpError('listar usuários do escritório'));
   }
 }

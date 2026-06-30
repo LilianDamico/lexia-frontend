@@ -12,7 +12,7 @@ export class PetitionService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<Petition[]> {
-    return this.http.get<Petition[]>(`${API}/`).pipe(handleHttpError('carregar petições'));
+    return this.http.get<Petition[]>(`${API}`).pipe(handleHttpError('carregar petições'));
   }
 
   getById(id: string): Observable<Petition> {
@@ -20,7 +20,7 @@ export class PetitionService {
   }
 
   create(payload: PetitionCreate): Observable<Petition> {
-    return this.http.post<Petition>(`${API}/`, payload).pipe(handleHttpError('criar a petição'));
+    return this.http.post<Petition>(`${API}`, payload).pipe(handleHttpError('criar a petição'));
   }
 
   update(id: string, payload: PetitionUpdate): Observable<Petition> {

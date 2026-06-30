@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 import { BillingService } from '../../core/services/billing.service';
 import { SUBSCRIPTION_PLANS, SubscriptionPlan, SubscriptionTier } from '../../core/models/billing.model';
 
@@ -73,8 +74,8 @@ export class PricingComponent implements OnInit {
     this.meta.updateTag({ property: 'og:title',       content: 'Planos e Preços — LEXIA IA Jurídica' });
     this.meta.updateTag({ property: 'og:description',  content: 'A inteligência artificial que trabalha ao lado do seu escritório. Planos a partir de R$ 97/mês.' });
     this.meta.updateTag({ property: 'og:type',         content: 'website' });
-    this.meta.updateTag({ property: 'og:url',          content: 'https://LEXIA.com.br/pricing' });
-    this.meta.updateTag({ property: 'og:image',        content: 'https://LEXIA.com.br/assets/og-pricing.png' });
+    this.meta.updateTag({ property: 'og:url',          content: `${environment.appUrl}/pricing` });
+    this.meta.updateTag({ property: 'og:image',        content: `${environment.appUrl}/assets/og-pricing.png` });
 
     // Twitter Card
     this.meta.updateTag({ name: 'twitter:card',        content: 'summary_large_image' });

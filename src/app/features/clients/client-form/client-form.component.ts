@@ -97,6 +97,12 @@ export class ClientFormComponent implements OnInit {
       notes: toNullable(values.notes),
     };
 
+    if (!payload.law_office_id) {
+      this.saving.set(false);
+      this.errorMessage.set('Sessão inválida. Faça login novamente.');
+      return;
+    }
+
     this.clientService.create(payload).subscribe({
       next: () => { this.saving.set(false); void this.router.navigate(['/clients']); },
       error: (error: Error) => { this.saving.set(false); this.errorMessage.set(error.message); },

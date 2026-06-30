@@ -23,6 +23,7 @@ export class SettingsComponent {
 
   readonly passwordForm = this.formBuilder.nonNullable.group(
     {
+      currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
     },
@@ -56,10 +57,21 @@ export class SettingsComponent {
       return;
     }
 
-    // A chamada real ao backend será implementada quando o endpoint PUT /users/me estiver disponível.
-    // Por ora exibe mensagem de orientação.
-    this.passwordError.set(
-      'Para alterar a senha, solicite ao administrador do escritório via Administração > Usuários.',
-    );
+    this.savingPassword.set(true);
+
+    const { currentPassword } = this.passwordForm.getRawValue();
+
+    this.authService.changePassword(currentPassword, newPassword).subscribe({
+      next: () => {
+        this.savingPassword.set(false);
+        this.passwordSuccess.set('Senha alterada com sucesso!');
+        this.passwordForm.reset();
+        this.passwordSubmitted.set(false);
+      },
+      error: (error: Error) => {
+        this.savingPassword.set(false);
+        this.passwordError.set(error.message);
+      },
+    });
   }
 }

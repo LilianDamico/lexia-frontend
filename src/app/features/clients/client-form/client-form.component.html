@@ -3,7 +3,7 @@
       <header class="page-header">
         <div>
           <h2>{{ isEditMode() ? 'Editar cliente' : 'Novo cliente' }}</h2>
-          <p>Cadastre dados essenciais para relacionamento jurÃ­dico e operacional.</p>
+          <p>Cadastre dados essenciais para relacionamento jurídico e operacional.</p>
         </div>
         <a class="btn-secondary" routerLink="/clients">Voltar</a>
       </header>
@@ -14,13 +14,13 @@
 
       <article class="card">
         @if (loading()) {
-          <p>Carregando formulÃ¡rio...</p>
+          <p>Carregando formulário...</p>
         } @else {
           <form class="form-stack" [formGroup]="form" (ngSubmit)="save()" novalidate>
             <div class="form-grid">
               <label>
                 Nome
-                <input type="text" formControlName="name" placeholder="Nome completo ou razÃ£o social" />
+                <input type="text" formControlName="name" placeholder="Nome completo ou razão social" />
                 @if (submitted() && form.controls.name.invalid) {
                   <span class="field-error">Informe o nome do cliente.</span>
                 }
@@ -35,7 +35,7 @@
                 E-mail
                 <input type="email" formControlName="email" placeholder="cliente@dominio.com" />
                 @if (form.controls.email.touched && form.controls.email.invalid) {
-                  <span class="field-error">Informe um e-mail vÃ¡lido.</span>
+                  <span class="field-error">Informe um e-mail válido.</span>
                 }
               </label>
 
@@ -45,8 +45,8 @@
               </label>
 
               <label class="full-width">
-                ObservaÃ§Ãµes
-                <textarea formControlName="notes" placeholder="AnotaÃ§Ãµes relevantes sobre o cliente"></textarea>
+                Observações
+                <textarea formControlName="notes" placeholder="Anotações relevantes sobre o cliente"></textarea>
               </label>
             </div>
 

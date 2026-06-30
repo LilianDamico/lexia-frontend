@@ -12,11 +12,11 @@ export class DeadlineService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<Deadline[]> {
-    return this.http.get<Deadline[]>(`${API}/`).pipe(handleHttpError('carregar prazos'));
+    return this.http.get<Deadline[]>(`${API}`).pipe(handleHttpError('carregar prazos'));
   }
 
   listByCase(caseId: string): Observable<Deadline[]> {
-    return this.http.get<Deadline[]>(`${API}/`, { params: { case_id: caseId } }).pipe(handleHttpError('carregar prazos do caso'));
+    return this.http.get<Deadline[]>(`${API}`, { params: { case_id: caseId } }).pipe(handleHttpError('carregar prazos do caso'));
   }
 
   getById(id: string): Observable<Deadline> {
@@ -24,7 +24,7 @@ export class DeadlineService {
   }
 
   create(payload: DeadlineCreate): Observable<Deadline> {
-    return this.http.post<Deadline>(`${API}/`, payload).pipe(handleHttpError('criar o prazo'));
+    return this.http.post<Deadline>(`${API}`, payload).pipe(handleHttpError('criar o prazo'));
   }
 
   update(id: string, payload: DeadlineUpdate): Observable<Deadline> {

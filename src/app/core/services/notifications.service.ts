@@ -16,7 +16,7 @@ export class NotificationsService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<AppNotification[]> {
-    return this.http.get<AppNotification[]>(`${API_ENDPOINTS.notifications}/`).pipe(handleHttpError('listar notificações'));
+    return this.http.get<AppNotification[]>(`${API_ENDPOINTS.notifications}`).pipe(handleHttpError('listar notificações'));
   }
 
   markRead(notificationIds: string[]): Observable<MarkReadResponse> {

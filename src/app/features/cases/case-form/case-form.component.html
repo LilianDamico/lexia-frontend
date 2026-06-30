@@ -28,6 +28,9 @@
 
               <label>
                 Cliente
+                @if (clientsError()) {
+                  <span class="field-error">{{ clientsError() }}</span>
+                }
                 <select formControlName="client_id">
                   <option value="">Selecione</option>
                   @for (client of clients(); track client.id) {
@@ -41,6 +44,9 @@
 
               <label>
                 Área jurídica
+                @if (legalAreasError()) {
+                  <span class="field-error">{{ legalAreasError() }}</span>
+                }
                 <select formControlName="legal_area_id">
                   <option value="">Selecione</option>
                   @for (legalArea of legalAreas(); track legalArea.id) {

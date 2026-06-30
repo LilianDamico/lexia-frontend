@@ -27,8 +27,6 @@ export class BillingService {
    */
   subscribe(tier: SubscriptionTier): void {
     if (!this._provider) {
-      // TODO: remover log e conectar ao gateway quando disponível
-      console.info('[BillingService] subscribe() — gateway não configurado.', { tier });
       return;
     }
     void this._provider.initCheckout(tier);
@@ -44,8 +42,7 @@ export class BillingService {
    */
   contactEnterprise(): void {
     // TODO: integrar com CRM ou abrir modal de formulário
-    console.info('[BillingService] contactEnterprise() — integração pendente.');
-    window.open('mailto:comercial@LEXIA.com.br?subject=Interesse%20no%20Plano%20Enterprise', '_blank');
+    window.open('mailto:comercial@lexiaadv.com?subject=Interesse%20no%20Plano%20Enterprise', '_blank');
   }
 
   /**

@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { CaseStatus, LegalArea, LegalCaseCreate, LegalCaseUpdate } from '../../../core/models/case.model';
 import { Client } from '../../../core/models/client.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -31,6 +30,8 @@ export class CaseFormComponent implements OnInit {
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly submitted = signal(false);
+  readonly clientsError = signal('');
+  readonly legalAreasError = signal('');
   readonly errorMessage = signal('');
   readonly form = this.formBuilder.nonNullable.group({
     title: ['', [Validators.required]],
@@ -47,7 +48,9 @@ export class CaseFormComponent implements OnInit {
   private caseId = '';
 
   ngOnInit(): void {
-    this.loadSupportData();
+    this.loadClients();
+    this.loadLegalAreas();
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode.set(true);
@@ -108,6 +111,12 @@ export class CaseFormComponent implements OnInit {
       strategy_notes: toNullable(values.strategy_notes),
     };
 
+    if (!payload.law_office_id) {
+      this.saving.set(false);
+      this.errorMessage.set('Sessão inválida. Faça login novamente.');
+      return;
+    }
+
     this.caseService.create(payload).subscribe({
       next: () => {
         this.saving.set(false);
@@ -120,16 +129,17 @@ export class CaseFormComponent implements OnInit {
     });
   }
 
-  private loadSupportData(): void {
-    forkJoin({
-      clients: this.clientService.list(),
-      legalAreas: this.caseService.getLegalAreas(),
-    }).subscribe({
-      next: ({ clients, legalAreas }) => {
-        this.clients.set(clients);
-        this.legalAreas.set(legalAreas);
-      },
-      error: (error: Error) => this.errorMessage.set(error.message),
+  private loadClients(): void {
+    this.clientService.list().subscribe({
+      next: (clients) => this.clients.set(clients),
+      error: (error: Error) => this.clientsError.set(error.message),
+    });
+  }
+
+  private loadLegalAreas(): void {
+    this.caseService.getLegalAreas().subscribe({
+      next: (areas) => this.legalAreas.set(areas),
+      error: (error: Error) => this.legalAreasError.set(error.message),
     });
   }
 

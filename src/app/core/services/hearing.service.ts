@@ -12,11 +12,11 @@ export class HearingService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<Hearing[]> {
-    return this.http.get<Hearing[]>(`${API}/`).pipe(handleHttpError('carregar audiências'));
+    return this.http.get<Hearing[]>(`${API}`).pipe(handleHttpError('carregar audiências'));
   }
 
   listByCase(caseId: string): Observable<Hearing[]> {
-    return this.http.get<Hearing[]>(`${API}/`, { params: { case_id: caseId } }).pipe(handleHttpError('carregar audiências do caso'));
+    return this.http.get<Hearing[]>(`${API}`, { params: { case_id: caseId } }).pipe(handleHttpError('carregar audiências do caso'));
   }
 
   getById(id: string): Observable<Hearing> {
@@ -24,7 +24,7 @@ export class HearingService {
   }
 
   create(payload: HearingCreate): Observable<Hearing> {
-    return this.http.post<Hearing>(`${API}/`, payload).pipe(handleHttpError('criar a audiência'));
+    return this.http.post<Hearing>(`${API}`, payload).pipe(handleHttpError('criar a audiência'));
   }
 
   update(id: string, payload: HearingUpdate): Observable<Hearing> {

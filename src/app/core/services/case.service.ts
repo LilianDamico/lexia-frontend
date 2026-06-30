@@ -10,7 +10,7 @@ export class CaseService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<LegalCase[]> {
-    return this.http.get<LegalCase[]>(`${API_ENDPOINTS.cases}/`).pipe(handleHttpError('carregar casos'));
+    return this.http.get<LegalCase[]>(`${API_ENDPOINTS.cases}`).pipe(handleHttpError('carregar casos'));
   }
 
   getById(id: string): Observable<LegalCase> {
@@ -18,7 +18,7 @@ export class CaseService {
   }
 
   create(payload: LegalCaseCreate): Observable<LegalCase> {
-    return this.http.post<LegalCase>(`${API_ENDPOINTS.cases}/`, payload).pipe(handleHttpError('criar o caso'));
+    return this.http.post<LegalCase>(`${API_ENDPOINTS.cases}`, payload).pipe(handleHttpError('criar o caso'));
   }
 
   update(id: string, payload: LegalCaseUpdate): Observable<LegalCase> {
@@ -30,6 +30,6 @@ export class CaseService {
   }
 
   getLegalAreas(): Observable<LegalArea[]> {
-    return this.http.get<LegalArea[]>(`${API_ENDPOINTS.legalAreas}/`).pipe(handleHttpError('carregar áreas jurídicas'));
+    return this.http.get<LegalArea[]>(`${API_ENDPOINTS.legalAreas}`).pipe(handleHttpError('carregar áreas jurídicas'));
   }
 }

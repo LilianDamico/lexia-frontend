@@ -48,6 +48,14 @@
         <form class="form-stack" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
           <div class="form-grid">
             <label>
+              Senha atual
+              <input type="password" formControlName="currentPassword" placeholder="Sua senha atual" autocomplete="current-password" />
+              @if (passwordSubmitted() && passwordForm.controls.currentPassword.invalid) {
+                <span class="field-error">Informe a senha atual.</span>
+              }
+            </label>
+
+            <label>
               Nova senha
               <input type="password" formControlName="newPassword" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
               @if (passwordSubmitted() && passwordForm.controls.newPassword.invalid) {

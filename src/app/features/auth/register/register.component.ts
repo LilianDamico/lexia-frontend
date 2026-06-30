@@ -17,7 +17,7 @@ const passwordMatchValidator: ValidatorFn = (group: AbstractControl): Validation
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  private readonly fb = inject(FormBuilder);
+  private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -25,10 +25,10 @@ export class RegisterComponent {
   readonly submitted = signal(false);
   readonly errorMessage = signal('');
 
-  readonly form = this.fb.nonNullable.group(
+  readonly form = this.formBuilder.nonNullable.group(
     {
-      full_name: ['', [Validators.required, Validators.minLength(3)]],
-      office_name: ['', [Validators.required, Validators.minLength(2)]],
+      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      officeName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
@@ -46,9 +46,9 @@ export class RegisterComponent {
     }
 
     this.loading.set(true);
-    const { full_name, email, password, office_name } = this.form.getRawValue();
+    const { fullName, email, password, officeName, confirmPassword } = this.form.getRawValue();
 
-    this.authService.register({ full_name, email, password, office_name }).subscribe({
+    this.authService.register({ fullName, email, password, officeName, confirmPassword }).subscribe({
       next: () => {
         this.loading.set(false);
         void this.router.navigate(['/dashboard']);

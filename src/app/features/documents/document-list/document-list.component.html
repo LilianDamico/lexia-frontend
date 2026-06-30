@@ -1,11 +1,11 @@
 
-    <!-- DIRECT.md: nenhum documento poderÃ¡ ser enviado automaticamente -->
+    <!-- DIRECT.md: nenhum documento poderá ser enviado automaticamente -->
     <div class="ai-disclaimer">
-      <span>ðŸ“„</span>
+      <span>📄</span>
       <span>
         <strong>Controle de documentos</strong>
-        Nenhum documento Ã© enviado automaticamente. Todo envio requer aÃ§Ã£o explÃ­cita do advogado.
-        Documentos analisados por IA sÃ£o apenas processados para extraÃ§Ã£o de conteÃºdo.
+        Nenhum documento é enviado automaticamente. Todo envio requer ação explícita do advogado.
+        Documentos analisados por IA são apenas processados para extração de conteúdo.
       </span>
     </div>
 
@@ -39,7 +39,7 @@
 
             <label>
               Tipo do documento
-              <input type="text" formControlName="document_type" placeholder="Contrato, procuraÃ§Ã£o, laudo..." />
+              <input type="text" formControlName="document_type" placeholder="Contrato, procuração, laudo..." />
             </label>
 
             <label>
@@ -64,7 +64,7 @@
         @if (!form.controls.case_id.value) {
           <div class="empty-state">
             <h3>Selecione um caso</h3>
-            <p>Os documentos serÃ£o exibidos apÃ³s a seleÃ§Ã£o do caso.</p>
+            <p>Os documentos serão exibidos após a seleção do caso.</p>
           </div>
         } @else if (documentsLoading()) {
           <p>Carregando documentos...</p>
@@ -82,14 +82,14 @@
                   <th>Tipo</th>
                   <th>Tamanho</th>
                   <th>Enviado em</th>
-                  <th>AÃ§Ãµes</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 @for (document of documents(); track document.id) {
                   <tr>
                     <td>{{ document.original_file_name }}</td>
-                    <td>{{ document.document_type || 'â€”' }}</td>
+                    <td>{{ document.document_type || '—' }}</td>
                     <td>{{ formatSize(document.file_size) }}</td>
                     <td>{{ document.created_at | lexiaDate }}</td>
                     <td>
@@ -107,7 +107,7 @@
     <lexia-confirm-dialog
       [visible]="confirmTarget() !== null"
       title="Excluir documento"
-      [message]="'Deseja excluir o documento ' + (confirmTarget()?.original_file_name ?? '') + '? Esta aÃ§Ã£o nÃ£o pode ser desfeita.'"
+      [message]="'Deseja excluir o documento ' + (confirmTarget()?.original_file_name ?? '') + '? Esta ação não pode ser desfeita.'"
       confirmLabel="Excluir"
       (confirmed)="deleteConfirmed()"
       (cancelled)="confirmTarget.set(null)"

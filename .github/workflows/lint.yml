@@ -25,5 +25,8 @@ jobs:
       - name: Lint Angular
         run: npm run lint --if-present
 
+      - name: Unit tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
       - name: Build check
         run: npm run build

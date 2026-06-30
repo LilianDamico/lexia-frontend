@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AuditEvent, AuditService } from '../audit.service';
 import { LexIADatePipe } from '../../../shared/pipes/lexia-date.pipe';
@@ -13,6 +14,7 @@ import { LexIADatePipe } from '../../../shared/pipes/lexia-date.pipe';
 export class AuditListComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly auditService = inject(AuditService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly events = signal<AuditEvent[]>([]);
   readonly loading = signal(true);
@@ -36,7 +38,7 @@ export class AuditListComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.filtersForm.valueChanges.subscribe((value) => {
+    this.filtersForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
       this.selectedEventType.set(value.event_type ?? '');
       this.selectedDate.set(value.date ?? '');
     });

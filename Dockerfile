@@ -1,5 +1,5 @@
 # ============================================================
-# Nexia Frontend — Dockerfile de produção (multi-stage)
+# LexIA Frontend — Dockerfile de produção (multi-stage)
 # ============================================================
 # Estágio 1: build Angular
 # Estágio 2: Nginx servindo o bundle estático

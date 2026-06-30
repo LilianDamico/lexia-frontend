@@ -6,13 +6,13 @@ import { AuthService } from '../../../core/services/auth.service';
 import { LoginComponent } from './login.component';
 
 const mockToken: TokenResponse = {
-  access_token: 'token-abc',
-  refresh_token: 'refresh-abc',
-  token_type: 'bearer',
-  user_id: 'user-1',
+  accessToken: 'token-abc',
+  refreshToken: 'refresh-abc',
+  tokenType: 'bearer',
+  userId: 'user-1',
   email: 'user@test.com',
   role: 'admin',
-  law_office_id: 'office-1',
+  lawOfficeId: 'office-1',
 };
 
 describe('LoginComponent', () => {

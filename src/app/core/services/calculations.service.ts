@@ -13,7 +13,7 @@ export class CalculationsService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<Calculation[]> {
-    return this.http.get<Calculation[]>(`${API_ENDPOINTS.calculations}/`).pipe(handleHttpError('listar cálculos'));
+    return this.http.get<Calculation[]>(`${API_ENDPOINTS.calculations}`).pipe(handleHttpError('listar cálculos'));
   }
 
   getById(id: string): Observable<Calculation> {
@@ -21,7 +21,7 @@ export class CalculationsService {
   }
 
   create(data: CalculationPayload): Observable<Calculation> {
-    return this.http.post<Calculation>(`${API_ENDPOINTS.calculations}/`, data).pipe(handleHttpError('criar cálculo'));
+    return this.http.post<Calculation>(`${API_ENDPOINTS.calculations}`, data).pipe(handleHttpError('criar cálculo'));
   }
 
   update(id: string, data: CalculationPayload): Observable<Calculation> {

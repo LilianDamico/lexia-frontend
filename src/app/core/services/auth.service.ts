@@ -21,13 +21,13 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${API_ENDPOINTS.auth}/login`, credentials).pipe(
       tap((response) => {
-        localStorage.setItem(TOKEN_KEY, response.access_token);
-        localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh_token);
+        localStorage.setItem(TOKEN_KEY, response.accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
         const user: AuthUser = {
-          userId: response.user_id,
+          userId: response.userId,
           email: response.email,
           role: response.role,
-          lawOfficeId: response.law_office_id,
+          lawOfficeId: response.lawOfficeId,
         };
         localStorage.setItem(USER_KEY, JSON.stringify(user));
         this._user.set(user);
@@ -42,13 +42,13 @@ export class AuthService {
   register(data: RegisterRequest): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${API_ENDPOINTS.auth}/register`, data).pipe(
       tap((response) => {
-        localStorage.setItem(TOKEN_KEY, response.access_token);
-        localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh_token);
+        localStorage.setItem(TOKEN_KEY, response.accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
         const user: AuthUser = {
-          userId: response.user_id,
+          userId: response.userId,
           email: response.email,
           role: response.role,
-          lawOfficeId: response.law_office_id,
+          lawOfficeId: response.lawOfficeId,
         };
         localStorage.setItem(USER_KEY, JSON.stringify(user));
         this._user.set(user);
@@ -56,6 +56,28 @@ export class AuthService {
       catchError((error: unknown) => {
         console.error('Erro ao registrar usuário.', error);
         return throwError(() => new Error('Não foi possível criar a conta. Verifique os dados e tente novamente.'));
+      }),
+    );
+  }
+
+  forgotPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${API_ENDPOINTS.auth}/forgot-password`, { email }).pipe(
+      catchError((error: unknown) => {
+        console.error('Erro ao solicitar redefinição de senha.', error);
+        return throwError(() => new Error('Não foi possível processar a solicitação. Tente novamente.'));
+      }),
+    );
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    return this.http.put<void>(`${API_ENDPOINTS.users}/me/password`, { currentPassword, newPassword }).pipe(
+      catchError((error: unknown) => {
+        const status = (error as { status?: number }).status;
+        if (status === 403) {
+          return throwError(() => new Error('Senha atual incorreta.'));
+        }
+        console.error('Erro ao alterar senha.', error);
+        return throwError(() => new Error('Não foi possível alterar a senha. Tente novamente.'));
       }),
     );
   }
@@ -81,11 +103,11 @@ export class AuthService {
     }
 
     return this.http
-      .post<TokenResponse>(`${API_ENDPOINTS.auth}/refresh`, { refresh_token: refreshToken })
+      .post<TokenResponse>(`${API_ENDPOINTS.auth}/refresh`, { refreshToken: refreshToken })
       .pipe(
         tap((response) => {
-          localStorage.setItem(TOKEN_KEY, response.access_token);
-          localStorage.setItem(REFRESH_TOKEN_KEY, response.refresh_token);
+          localStorage.setItem(TOKEN_KEY, response.accessToken);
+          localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
         }),
         map(() => undefined),
         catchError((error: unknown) => {

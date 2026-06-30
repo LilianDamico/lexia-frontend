@@ -4,20 +4,21 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  full_name: string;
+  fullName: string;
   email: string;
   password: string;
-  office_name: string;
+  officeName: string;
+  confirmPassword?: string;
 }
 
 export interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  user_id: string;
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  userId: string;
   email: string;
   role: string;
-  law_office_id: string;
+  lawOfficeId: string;
 }
 
 export interface AuthUser {

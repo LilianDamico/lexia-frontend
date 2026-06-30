@@ -12,7 +12,7 @@ export class ClientService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<Client[]> {
-    return this.http.get<Client[]>(`${API}/`).pipe(handleHttpError('carregar clientes'));
+    return this.http.get<Client[]>(`${API}`).pipe(handleHttpError('carregar clientes'));
   }
 
   getById(id: string): Observable<Client> {
@@ -20,7 +20,7 @@ export class ClientService {
   }
 
   create(payload: ClientCreate): Observable<Client> {
-    return this.http.post<Client>(`${API}/`, payload).pipe(handleHttpError('criar o cliente'));
+    return this.http.post<Client>(`${API}`, payload).pipe(handleHttpError('criar o cliente'));
   }
 
   update(id: string, payload: ClientUpdate): Observable<Client> {

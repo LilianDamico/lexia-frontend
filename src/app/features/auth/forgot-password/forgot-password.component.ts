@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'lexia-forgot-password',
@@ -11,6 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class ForgotPasswordComponent {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
 
   readonly loading = signal(false);
   readonly submitted = signal(false);
@@ -32,10 +34,15 @@ export class ForgotPasswordComponent {
 
     this.loading.set(true);
 
-    // TODO: integrar com endpoint POST /api/v1/auth/forgot-password
-    setTimeout(() => {
-      this.loading.set(false);
-      this.success.set(true);
-    }, 800);
+    this.authService.forgotPassword(this.form.getRawValue().email).subscribe({
+      next: () => {
+        this.loading.set(false);
+        this.success.set(true);
+      },
+      error: (error: Error) => {
+        this.loading.set(false);
+        this.errorMessage.set(error.message);
+      },
+    });
   }
 }

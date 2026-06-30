@@ -14,16 +14,16 @@
           <div class="form-grid">
             <label class="full-width">
               Nome completo
-              <input type="text" formControlName="full_name" autocomplete="name" placeholder="Maria da Silva" />
-              @if (submitted() && form.controls.full_name.invalid) {
+              <input type="text" formControlName="fullName" autocomplete="name" placeholder="Maria da Silva" />
+              @if (submitted() && form.controls.fullName.invalid) {
                 <span class="field-error">Informe seu nome completo (mínimo 3 caracteres).</span>
               }
             </label>
 
             <label class="full-width">
               Nome do escritório
-              <input type="text" formControlName="office_name" placeholder="Silva & Associados Advocacia" />
-              @if (submitted() && form.controls.office_name.invalid) {
+              <input type="text" formControlName="officeName" placeholder="Silva & Associados Advocacia" />
+              @if (submitted() && form.controls.officeName.invalid) {
                 <span class="field-error">Informe o nome do escritório.</span>
               }
             </label>
