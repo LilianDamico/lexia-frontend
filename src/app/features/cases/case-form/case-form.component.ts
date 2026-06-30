@@ -71,10 +71,10 @@ export class CaseFormComponent implements OnInit {
       return;
     }
 
-    this.saving.set(true);
     const values = this.form.getRawValue();
 
     if (this.isEditMode()) {
+      this.saving.set(true);
       const payload: LegalCaseUpdate = {
         title: values.title,
         description: toNullable(values.description),
@@ -112,11 +112,11 @@ export class CaseFormComponent implements OnInit {
     };
 
     if (!payload.law_office_id) {
-      this.saving.set(false);
       this.errorMessage.set('Sessão inválida. Faça login novamente.');
       return;
     }
 
+    this.saving.set(true);
     this.caseService.create(payload).subscribe({
       next: () => {
         this.saving.set(false);

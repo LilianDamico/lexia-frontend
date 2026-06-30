@@ -120,11 +120,11 @@
           </p>
           <label style="margin-top:1rem; display:grid; gap:.4rem; color:#334155; font-weight:600;">
             Motivo da rejeição
-            <textarea [(ngModel)]="rejectionReason" rows="4" placeholder="Descreva detalhadamente o motivo da rejeição..."></textarea>
+            <textarea [ngModel]="rejectionReason()" (ngModelChange)="rejectionReason.set($event)" rows="4" placeholder="Descreva detalhadamente o motivo da rejeição..."></textarea>
           </label>
           <div class="dialog-actions" style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:1.25rem;">
             <button type="button" class="btn-secondary" (click)="closeReject()">Cancelar</button>
-            <button type="button" class="btn-danger" (click)="confirmReject()" [disabled]="rejectionReason.trim().length < 10">
+            <button type="button" class="btn-danger" (click)="confirmReject()" [disabled]="rejectionReason().trim().length < 10">
               Confirmar rejeição
             </button>
           </div>

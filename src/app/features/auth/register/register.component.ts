@@ -46,9 +46,9 @@ export class RegisterComponent {
     }
 
     this.loading.set(true);
-    const { fullName, email, password, officeName, confirmPassword } = this.form.getRawValue();
+    const { fullName, email, password, officeName } = this.form.getRawValue();
 
-    this.authService.register({ fullName, email, password, officeName, confirmPassword }).subscribe({
+    this.authService.register({ fullName, email, password, officeName }).subscribe({
       next: () => {
         this.loading.set(false);
         void this.router.navigate(['/dashboard']);

@@ -53,6 +53,6 @@ describe('AuditListComponent', () => {
       throwError(() => new Error('Erro ao carregar auditoria.'))
     );
     component.loadEvents();
-    expect(component.errorMessage()).toContain('Erro');
+    expect(component.errorMessage()).toBe('Erro ao carregar auditoria.');
   });
 });

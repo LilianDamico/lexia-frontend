@@ -86,7 +86,7 @@ export class AuthService {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (refreshToken) {
       this.http
-        .post(`${API_ENDPOINTS.auth}/logout`, { refresh_token: refreshToken })
+        .post(`${API_ENDPOINTS.auth}/logout`, { refreshToken: refreshToken })
         .subscribe({ error: (e) => console.warn('Logout remoto falhou:', e) });
     }
     this.clearSession();

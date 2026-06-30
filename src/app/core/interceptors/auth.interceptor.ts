@@ -1,8 +1,14 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, shareReplay, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+
+// Shared Observable that serializes concurrent token-refresh calls.
+// Multiple simultaneous 401s re-use the same refresh request instead of
+// each firing an independent call (which would cause all but the first to
+// fail because our backend rotates and immediately invalidates refresh tokens).
+let refreshTokens$: Observable<void> | null = null;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -21,8 +27,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         !req.url.includes('/auth/refresh') &&
         !req.url.includes('/auth/login')
       ) {
-        return authService.refreshTokens().pipe(
+        if (!refreshTokens$) {
+          refreshTokens$ = authService.refreshTokens().pipe(shareReplay(1));
+        }
+
+        return refreshTokens$.pipe(
           switchMap(() => {
+            refreshTokens$ = null;
             const newToken = authService.getToken();
             const retryReq = newToken
               ? req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
@@ -30,6 +41,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(retryReq);
           }),
           catchError((refreshError: unknown) => {
+            refreshTokens$ = null;
             void router.navigate(['/login']);
             return throwError(() => refreshError);
           }),

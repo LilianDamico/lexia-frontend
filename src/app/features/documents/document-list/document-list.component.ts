@@ -34,6 +34,8 @@ export class DocumentListComponent implements OnInit {
     document_type: [''],
   });
 
+  private fileInput: HTMLInputElement | null = null;
+
   ngOnInit(): void {
     this.caseService.list().subscribe({
       next: (cases) => this.cases.set(cases),
@@ -43,6 +45,7 @@ export class DocumentListComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
+    this.fileInput = input;
     this.selectedFile.set(input.files?.item(0) ?? null);
   }
 
@@ -91,6 +94,9 @@ export class DocumentListComponent implements OnInit {
           this.successMessage.set('Documento enviado com sucesso.');
           this.form.controls.document_type.setValue('');
           this.selectedFile.set(null);
+          if (this.fileInput) {
+            this.fileInput.value = '';
+          }
           this.loadDocuments();
         },
         error: (error: Error) => {

@@ -5,7 +5,7 @@ import { Petition } from '../../../core/models/petition.model';
 import { PetitionService } from '../../../core/services/petition.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
-type DialogAction = 'delete' | 'approve' | 'reject';
+type DialogAction = 'delete' | 'submit' | 'approve' | 'reject';
 
 interface DialogState {
   visible: boolean;
@@ -32,7 +32,7 @@ export class PetitionListComponent implements OnInit {
   readonly errorMessage = signal('');
   readonly successMessage = signal('');
   readonly showRejectForm = signal(false);
-  rejectionReason = '';
+  readonly rejectionReason = signal('');
 
   readonly dialog = signal<DialogState>({
     visible: false,
@@ -92,7 +92,7 @@ export class PetitionListComponent implements OnInit {
   openSubmit(petition: Petition): void {
     this.dialog.set({
       visible: true,
-      action: 'approve',
+      action: 'submit',
       target: petition,
       title: 'Submeter para revisão',
       message: `Deseja submeter "${petition.title}" para revisão do advogado responsável?`,
@@ -115,7 +115,7 @@ export class PetitionListComponent implements OnInit {
 
   openReject(petition: Petition): void {
     this.dialog.set({ ...this.dialog(), action: 'reject', target: petition, visible: false });
-    this.rejectionReason = '';
+    this.rejectionReason.set('');
     this.showRejectForm.set(true);
   }
 
@@ -137,7 +137,7 @@ export class PetitionListComponent implements OnInit {
 
   closeReject(): void {
     this.showRejectForm.set(false);
-    this.rejectionReason = '';
+    this.rejectionReason.set('');
   }
 
   executeAction(): void {
@@ -149,6 +149,16 @@ export class PetitionListComponent implements OnInit {
       this.petitionService.delete(target.id).subscribe({
         next: () => {
           this.successMessage.set('Petição excluída.');
+          this.loadPetitions();
+        },
+        error: (error: Error) => this.errorMessage.set(error.message),
+      });
+    }
+
+    if (action === 'submit') {
+      this.petitionService.submit(target.id).subscribe({
+        next: () => {
+          this.successMessage.set('Petição submetida para revisão com sucesso.');
           this.loadPetitions();
         },
         error: (error: Error) => this.errorMessage.set(error.message),
@@ -168,13 +178,13 @@ export class PetitionListComponent implements OnInit {
 
   confirmReject(): void {
     const target = this.dialog().target;
-    if (!target || this.rejectionReason.trim().length < 10) return;
+    if (!target || this.rejectionReason().trim().length < 10) return;
 
     this.showRejectForm.set(false);
-    this.petitionService.reject(target.id, { rejection_reason: this.rejectionReason.trim() }).subscribe({
+    this.petitionService.reject(target.id, { rejection_reason: this.rejectionReason().trim() }).subscribe({
       next: () => {
         this.successMessage.set('Petição rejeitada. Motivo registrado para rastreabilidade.');
-        this.rejectionReason = '';
+        this.rejectionReason.set('');
         this.loadPetitions();
       },
       error: (error: Error) => this.errorMessage.set(error.message),
