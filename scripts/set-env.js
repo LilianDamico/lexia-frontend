@@ -11,12 +11,14 @@ const fs   = require('fs');
 const path = require('path');
 
 const apiUrl = process.env.LEXIA_API_URL || 'https://api.lexiaadv.com/api/v1';
+const appUrl = process.env.LEXIA_APP_URL || 'https://lexiaadv.com';
 
 const content = `// Gerado automaticamente por scripts/set-env.js — não edite manualmente.
-// Para alterar a URL da API, defina LEXIA_API_URL no painel do Render.
+// Para alterar as URLs, defina LEXIA_API_URL e LEXIA_APP_URL no painel do Render.
 export const environment = {
   production: true,
   apiBaseUrl: '${apiUrl}',
+  appUrl: '${appUrl}',
 };
 `;
 
@@ -25,3 +27,4 @@ fs.writeFileSync(target, content, 'utf-8');
 
 console.log(`[set-env] environment.prod.ts atualizado`);
 console.log(`[set-env] apiBaseUrl → ${apiUrl}`);
+console.log(`[set-env] appUrl     → ${appUrl}`);
